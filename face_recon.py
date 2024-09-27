@@ -11,11 +11,9 @@ serial_number = 1
 video_capture = cv2.VideoCapture(0)
 
 # Helper function to add a new person
-def register_new_person(face_encoding):
-    global serial_number
+def register_new_person(face_encoding, name):
     known_face_encodings.append(face_encoding)
-    known_face_names.append(f"Person {serial_number}")
-    serial_number += 1
+    known_face_names.append(name)
 
 while True:
     # Capture a frame from the video feed
@@ -31,7 +29,6 @@ while True:
     # Convert the image to RGB
     rgb_small_frame = np.ascontiguousarray(small_frame[:, :, ::-1])
 
-
     # Debugging: Check the shape and type of rgb_small_frame
     print(f"rgb_small_frame shape: {rgb_small_frame.shape}, dtype: {rgb_small_frame.dtype}")
 
@@ -39,16 +36,15 @@ while True:
     face_locations = face_recognition.face_locations(rgb_small_frame)
     print(f"Face locations: {face_locations}")
 
+    face_encodings = []
     if face_locations:
         try:
             face_encodings = face_recognition.face_encodings(rgb_small_frame, face_locations)
             print(f"Face encodings: {face_encodings}")  # Debugging: check encodings
         except Exception as e:
             print(f"Error during face encoding: {e}")
-            face_encodings = []
-    else:
-        face_encodings = []
 
+    # Process each detected face
     for face_encoding in face_encodings:
         # Check if this face matches any previously known face
         matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
@@ -56,4 +52,27 @@ while True:
 
         if True in matches:
             first_match_index = matches.index(True)
-       
+            name = known_face_names[first_match_index]
+        else:
+            # If no match is found, prompt for the new person's name
+            name = input("New face detected! Please enter the name: ")
+            register_new_person(face_encoding, name)
+
+        # Display the name on the frame
+        print(f"Detected: {name}")
+
+        # Draw a box around the face
+        for (top, right, bottom, left) in face_locations:
+            cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
+            cv2.putText(frame, name, (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+
+    # Display the result frame
+    cv2.imshow('Video', frame)
+
+    # Exit the loop by pressing 'q'
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+# Release the camera and close any OpenCV windows
+video_capture.release()
+cv2.destroyAllWindows()
