@@ -1,6 +1,6 @@
 # db.py
 from pymongo import MongoClient
-from settings import MONGODB_SETTINGS
+from config.settings import MONGODB_SETTINGS
 
 def get_connection():
     host = MONGODB_SETTINGS['HOST']
