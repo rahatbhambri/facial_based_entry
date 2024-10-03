@@ -4,19 +4,18 @@ import json
 
 def fetch_all_encodings():
     db = get_connection()
-    
     encodings = []
-    names = []
+    ids = []
     # Example: Create a collection and insert a document
     users_data = db.users.find()
     for user in users_data:
         str_e = user.get("face_encoding") 
         e = json.loads(str_e)
-        n = user.get("name")
+        id = user.get("_id")
         encodings.append(e)
-        names.append(n)
+        ids.append(id)
         
-    return encodings, names
+    return encodings, ids
     
     
     
