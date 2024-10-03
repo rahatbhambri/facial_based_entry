@@ -72,6 +72,8 @@ class FaceRecognizer:
                     user_data = self.db.users.find_one({"_id": id})
                     name = user_data["name"]
                     print("Detected client: ", name)
+                    print("Ticket number: ", user_data.get("ticket_id", ""))
+                                        
                     reocurring_user = True
                     break
                 else:
@@ -130,15 +132,25 @@ class FaceRecognizer:
                 except Exception as e:
                     print(f"Error during face encoding: {e}")
     
-            # Process each detected face
-            for face_encoding in face_encodings:
-                # If no match is found, prompt for the new person's name
-                name = input("New face detected! Please enter the name: ")
-                ticket = input("Please enter your ticket number")
-                # pancard = input("Input pancard")
-                self.register_new_person(face_encoding, name, ticket)
-            break
+                # Process each detected face
+                for face_encoding in face_encodings:
+                    # If no match is found, prompt for the new person's name
+                    name = input("New face detected! Please enter the name: ")
+                    ticket = input("Please enter your ticket number")
+                    # pancard = input("Input pancard")
+                    self.register_new_person(face_encoding, name, ticket)
+                break
             
+            # Display the result frame
+            cv2.imshow('Video', frame)
+
+            # Exit the loop by pressing 'q'
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+            
+            if reocurring_user:
+                break
+
         # Release the camera and close any OpenCV windows
         self.video_capture.release()
         cv2.destroyAllWindows()
