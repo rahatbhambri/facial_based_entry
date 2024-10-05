@@ -71,9 +71,12 @@ class FaceRecognizer:
                     id = self.known_face_id[first_match_index]
                     user_data = self.db.users.find_one({"_id": id})
                     name = user_data["name"]
-                    print("Detected client: ", name)
-                    print("Ticket number: ", user_data.get("ticket_id", ""))
-                                        
+                    
+                    tickets_data = list(self.db.tickets.find({"user_id": str(id)}))
+                    print("All tickets booked for user: ")
+                    for t in tickets_data:
+                        print(t.get("ticket_id"), t.get("booking_time"))
+                                                            
                     reocurring_user = True
                     break
                 else:
@@ -106,7 +109,7 @@ class FaceRecognizer:
 # cinemas - cinema_id, name, audis
 
 
-    def register_ticket_with_face(self):
+    def register_face_with_ticket(self):
         reocurring_user = False
         while True:
             # Capture a frame from the video feed
