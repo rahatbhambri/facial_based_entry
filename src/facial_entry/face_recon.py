@@ -26,10 +26,11 @@ class FaceRecognizer:
         # Convert the list to a JSON string
         face_encoding_str = json.dumps(face_encoding_list)
 
-        self.db.users.insert_one({
+        user_data= self.db.users.insert_one({
             'face_encoding': face_encoding_str,
             'name' : name, 
             })
+        self.user_id = user_data.inserted_id
 
 
     # def register_ticket_via_face(self)
@@ -84,15 +85,9 @@ class FaceRecognizer:
                     name = input("New face detected! Please enter the name to signup: ")
                     # pancard = input("Input pancard")
                     self.register_new_person(face_encoding, name)
+                    reocurring_user = True
+                    break
             
-                    # Draw a box around the face
-                    for (top, right, bottom, left) in face_locations:
-                        cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
-                        cv2.putText(frame, name, (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-
-                # Display the result frame
-                cv2.imshow('Video', frame)
-
             # Exit the loop by pressing 'q'
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break

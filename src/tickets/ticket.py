@@ -1,4 +1,4 @@
-from .utils import generate_random_string
+from utils.utils import generate_random_string
 from database.db import get_connection
 from datetime import datetime
 
