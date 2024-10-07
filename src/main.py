@@ -1,9 +1,7 @@
 from facial_entry import face_recon
 from utils.utils import *
 from tickets.ticket import TicketGenerator
-from tickets.ticket import TicketGenerator
-# from database.db import get_connection
-from utils.utils import *
+
 
 def main():
     FaceRec = face_recon.FaceRecognizer()
