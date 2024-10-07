@@ -16,7 +16,3 @@ def get_all_bookings(user_id):
 
 def get_all_cinemas():
     return list(db.cinemas.find({}, {"_id":0, "name": 1, "cinema_id": 1}))
-
-def get_all_movies():
-    return list(db.movies.find({}, {"_id":0, "name": 1, "movie_id": 1}))
-    

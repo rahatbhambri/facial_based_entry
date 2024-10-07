@@ -2,5 +2,5 @@
 MONGODB_SETTINGS = {
     'HOST': 'localhost',
     'PORT': 27017,
-    'DB_NAME': 'config',
+    'DB_NAME': 'my_show',
 }
